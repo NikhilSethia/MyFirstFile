@@ -5,21 +5,22 @@ traj = md.load('r9par157.mdcrd', top = 'stripped.prmtop') #uploading Trajecories
 from msmbuilder.featurizer import DihedralFeaturizer #For Dihedral Featurization
 feat = DihedralFeaturizer(types = ['phi', 'psi'], sincos = True) #Defining what we ant to calc phi, psi, sincos 
 seq = feat.transform(list(traj)) #will give the sincos values of the each of the frame of each trajectory
-from msmbuilder.decomposition import tICA
-obj1 = tICA(n_components = 10,lag_time=50,weighted_transform=False)
-seq2=[i[0] for i in seq]
-seq3=[seq2]
-seq3[0]=np.array(seq3[0])
-tics=obj1.fit(seq3)
-tics.components_
-from sklearn.cluster import KMeans
-cluster = KMeans(n_clusters=5).fit(tics.components_)
-l=cluster.labels_
-from msmbuilder.msm import MarkovStateModel
-from msmbuilder.utils import dump
-model = MarkovStateModel(lag_time=20)
-model.fit(l)
+from msmbuilder.decomposition import tICA #importing tICA to reduce Dimensionality
+obj1 = tICA(n_components = 10,lag_time=50,weighted_transform=False) #defining tICA object
+seq2=[i[0] for i in seq] # handling seq
+seq3=[seq2] #handling seq
+seq3[0]=np.array(seq3[0]) #changing it to array
+tics=obj1.fit(seq3) #defining tICA object
+tics.components_ #to see the components that present now
+from sklearn.cluster import KMeans #
+cluster = KMeans(n_clusters=5).fit(tics.components_) # clustering
+l=cluster.labels_ #getting labels
+from msmbuilder.msm import MarkovStateModel #building MarkovState
+from msmbuilder.utils import dump #importing dump
+model = MarkovStateModel(lag_time=20) #making lag time = 20
+model.fit(l) #fitting the data
 
+#SVM code :-
 import matplotlib.pyplot as plt
 from sklearn import svm
 from matplotlib import style
