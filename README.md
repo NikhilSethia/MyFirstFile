@@ -1,2 +1,1 @@
-# MyFirstFile
-ipython
+This is my file
